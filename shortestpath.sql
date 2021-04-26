@@ -8,7 +8,7 @@ CREATE TABLE lastNode (Last_Station_ID INT, I INT);
 
 AlTER table lastNode ADD PRimary key (I);
 INSERT INTO lastNode VALUES (1, 1);
-Drop trigger if exists lastAdded;
+Drop trigger IF EXISTS lastAdded;
 
 DELIMITER $$
 
@@ -19,13 +19,13 @@ BEGIN
 END $$
 
 
-
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS insertStation;
 DROP PROCEDURE IF EXISTS insertMain;
 
 DELIMITER $$
+
 SET max_sp_recursion_depth=3;
 CREATE PROCEDURE insertStation (insertstationID INT, starter VARCHAR(20), destination VARCHAR(20)) 
 this_procedure:BEGIN
@@ -34,7 +34,7 @@ DECLARE nextNode INT DEFAULT NULL;
 INSERT INTO stack_Compare (Station)
 	SELECT Name from Station WHERE Station_ID = insertstationID;
 
-IF insertStationID IN (SELECT Station_ID FROM Station WHERE Name = starter OR Name = destination)
+IF insertStationID IN (SELECT Station_ID FROM Station WHERE Name = destination)
 	THEN LEAVE this_procedure;
 END IF;
 SET nextNode = (SELECT Next_Station FROM Station WHERE Station_ID = insertstationID);
@@ -54,7 +54,7 @@ DECLARE nextNode INT DEFAULT NULL;
 CALL insertStation(8, starter, destination);
 loop1: LOOP
 SET nextNode = (SELECT Station.Next_Station FROM Station, lastNode WHERE Station.Station_ID = lastNode.Last_Station_ID);
-IF nextNode IN (SELECT Station_ID FROM Station WHERE Name = starter OR Name = destination)
+IF nextNode IN (SELECT Station_ID FROM Station WHERE Name = destination)
 	THEN LEAVE loop1;
 END IF;
 END LOOP loop1;
